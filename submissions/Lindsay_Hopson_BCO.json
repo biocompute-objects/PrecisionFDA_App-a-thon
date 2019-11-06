@@ -1,0 +1,319 @@
+{
+    "bco_id": "http://biocomputeobject.org/BCO_000527",
+    "checksum": "f42ec611aa763ce63d396022dffc74a5ae34435540ba117d99ef829b1b25e232",
+    "bco_spec_version": "1.3.0",
+    "provenance_domain": {
+        "name": "piRNA Differential Expression in Breast Cancer Cells",
+        "version": "1.0.0",
+        "license": "Attribution 4.0 International",
+        "created": "2019-10-07T23:22:44.417188",
+        "modified": "2019-10-17T21:50:43.846858",
+        "review": [
+            {
+                "status": "approved",
+                "reviewer_comment": "Reviewed and approved by BioCompute technical assistant",
+                "reviewer": {
+                    "orcid": "https://orcid.org/0000-0002-8824-4637",
+                    "affiliation": "George Washington University ",
+                    "contribution": [
+                        "curatedBy"
+                    ],
+                    "name": "Janisha Patel",
+                    "email": "janishapatel@gwu.edu"
+                },
+                "date": "10-17-2019"
+            }
+        ],
+        "contributors": [
+            {
+                "name": "Lindsay Hopson",
+                "orcid": "https://orcid.org/0000-0002-1586-1693",
+                "affiliation": "The George Washington University",
+                "contribution": [
+                    "createdBy"
+                ],
+                "email": "lhopson15@gwu.edu"
+            },
+            {
+                "name": "Adanan Hashim",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Francesca Rizzo",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Giovanna Marchese",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Maria Ravo",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Roberta Tarallo",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Giovanni Nassa",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Giorgio Giurato",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Gianluca Santamaria",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Angela Cordella",
+                "orcid": "",
+                "affiliation": "Fondazione IRCCS SDN",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Concita Canrarella",
+                "orcid": "",
+                "affiliation": "Consiglio per la Ricerca e la Sperimentazione in Agricoltura at Centro di Ricerca per l'Orticoltura",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": ""
+            },
+            {
+                "name": "Alessandro Weisz",
+                "orcid": "",
+                "affiliation": "Laboratory of Molecular Medicine and Genomics at University of Salerno and Division of Molecular Pathology and Medical Genomics, ‘SS. Giovanni di Dio e Ruggi d'Aragona’ Hospital at University of Salerno",
+                "contribution": [
+                    "authoredBy",
+                    "derivedFrom"
+                ],
+                "email": "aweisz@unisa.it"
+            }
+        ]
+    },
+    "usability_domain": [
+        "piRNAs are genetic elements that contribute to gene silencing and the regulation of gene expression. It has been observed that in breast cancer cells, piRNAs are differentially expressed. In this paper, the pathways of these differentially expressed piRNA are under investigation by using the bioinformatic pipeline provided. Using this workflow, further analyze of piRNAs for somatic breast cancer cells was conducted.",
+        "This BCO was adapted from the publication \"RNA sequencing identifies specific PIWI-interacting small non-coding RNA expression patterns in breast cancer\". [PMID: 25313140] "
+    ],
+    "extension_domain": {},
+    "description_domain": {
+        "keywords": [
+            "RNA",
+            "non-coding RNA",
+            "piRNAs"
+        ],
+        "pipeline_steps": [
+            {
+                "name": "CellMiner",
+                "version": "2.2",
+                "step_number": 1,
+                "input_list": [
+                    {
+                        "access_time": "2019-17-10",
+                        "uri": "https://www.ncbi.nlm.nih.gov/sra?term=SRP040505",
+                        "sha1_checksum": "1",
+                        "filename": "Small RNA Sequencing file"
+                    }
+                ],
+                "output_list": [],
+                "prerequisite": [],
+                "description": "Identify expression level of transcripts encoding components of the piRNA biogenesis pathway in breast cancer cell lines."
+            },
+            {
+                "name": "iMir",
+                "version": "2.0",
+                "step_number": 2,
+                "input_list": [],
+                "output_list": [],
+                "prerequisite": [],
+                "description": "Identify the sncRNA families."
+            },
+            {
+                "name": "DESeq Bioconductor Package",
+                "version": "1.14.0",
+                "step_number": 3,
+                "input_list": [],
+                "output_list": [],
+                "prerequisite": [],
+                "description": "Differential expression analysis of piRNA and Biclustering and Principal Component Analysis (PCA) of sncRNA expression profiles were done in this step."
+            },
+            {
+                "name": "IntersectBed",
+                "version": "2.18",
+                "step_number": 4,
+                "input_list": [],
+                "output_list": [],
+                "prerequisite": [],
+                "description": "Identify genomic piRNA loci within repeat regions."
+            },
+            {
+                "name": "MiRanda",
+                "version": "3.3a",
+                "step_number": 5,
+                "input_list": [],
+                "output_list": [],
+                "prerequisite": [],
+                "description": "Identify piRNA target RNAs were identified by sequence complementarity techniques."
+            },
+            {
+                "name": "Ingenuity Pathway Analysis ",
+                "version": "",
+                "step_number": 6,
+                "input_list": [],
+                "output_list": [
+                    {
+                        "access_time": "2019-17-10",
+                        "uri": "http://example.com/12415/oncotarget-05-9901-s002.pdf",
+                        "sha1_checksum": "1",
+                        "filename": "oncotarget-05-9901-s002"
+                    }
+                ],
+                "prerequisite": [],
+                "description": "Identify biological processes significantly associated to piRNA-targeted mRNAs."
+            }
+        ]
+    },
+    "execution_domain": {
+        "external_data_endpoints": [
+            {
+                "name": "CellMiner",
+                "url": "https://discover.nci.nih.gov/cellminer/"
+            },
+            {
+                "name": "iMir ",
+                "url": "http://www.labmedmolge.unisa.it/inglese/research/imir"
+            },
+            {
+                "name": "DESeq Bioconductor Package",
+                "url": "https://www.huber.embl.de/users/anders/DESeq"
+            },
+            {
+                "name": "bedtools",
+                "url": "https://github.com/arq5x/bedtools2"
+            },
+            {
+                "name": "MiRanda",
+                "url": "https://bioweb.pasteur.fr/packages/pack@miRanda@3.3a"
+            },
+            {
+                "name": "Ingenuity Pathway Analysis ",
+                "url": "https://www.qiagen.com/us/products/discovery-and-translational-research/next-generation-sequencing/informatics-and-data/interpretation-content-databases/ingenuity-pathway-analysis/#orderinginformation"
+            }
+        ],
+        "environment_variables": {},
+        "script_driver": "",
+        "software_prerequisites": [],
+        "script": []
+    },
+    "parametric_domain": [
+        {
+            "step": "2",
+            "param": "Minimum read count",
+            "value": "3"
+        },
+        {
+            "step": "2",
+            "param": "Minimum read length",
+            "value": "17"
+        },
+        {
+            "step": "2",
+            "param": "minReadlength Trans",
+            "value": "32"
+        },
+        {
+            "step": "2",
+            "param": "maxReadlength",
+            "value": "32"
+        },
+        {
+            "step": "5",
+            "param": "Alignment score",
+            "value": "greater than or equal to 170"
+        },
+        {
+            "step": "5",
+            "param": "Energy threshold",
+            "value": "less than or equal to -20.0 kcal/mol"
+        }
+    ],
+    "io_domain": {
+        "input_subdomain": [
+            {
+                "uri": {
+                    "access_time": "",
+                    "uri": "1",
+                    "sha1_checksum": "https://www.ncbi.nlm.nih.gov/sra?term=SRP040505",
+                    "filename": "Small RNA Sequencing files"
+                }
+            }
+        ],
+        "output_subdomain": [
+            {
+                "mediatype": "pdf",
+                "uri": {
+                    "access_time": "",
+                    "uri": "http://example.com/12415/oncotarget-05-9901-s002.pdf",
+                    "sha1_checksum": "1",
+                    "filename": "oncotarget-05-9901-s002"
+                }
+            }
+        ]
+    },
+    "error_domain": {}
+}

@@ -1,0 +1,2870 @@
+{
+  "bco_spec_version": "https://w3id.org/biocompute/1.3.0/",
+  "bco_id": "http://biocompute.sbgenomics.com/bco/9ad84b51-f691-44fa-98f5-a8c19324b5b3",
+  "checksum": "3a71a9a93790f27512dfad4a968ea52f1f1e145be61e361134c4296f9bdb96aa",
+  "provenance_domain": {
+    "name": "RNA-Seq Differential expression & pathway analysis",
+    "version": "1.0.",
+    "review": [
+      {
+        "status": "approved",
+        "reviewer_comment": "Everything seems correct.",
+        "date": "2019-10-17T00:00:00+0000",
+        "reviewer": {
+            "name": "Soner Koc",
+            "affiliation": "SBG",
+            "email": "soner.koc@sevenbridges.com",
+            "contribution": ["curatedBy", "createdBy"],
+            "orcid": ""
+        }
+      }
+    ],
+    "derived_from": "",
+    "obsolete_after": "2019-10-18T00:00:00+0000",
+    "embargo": {"start_time": "2019-10-17T00:00:00+0000","end_time": "2019-10-18T00:00:00+0000"},
+    "created": "2019-10-17T00:00:00+0000",
+    "modified": "2019-10-18T00:00:00+0000",
+    "contributors": [
+      {
+        "name": "Soner Koc",
+        "affiliation": "SBG",
+        "email": "soner.koc@sevenbridges.com",
+        "contribution": ["createdBy"],
+        "orcid": ""
+      },
+
+      {
+        "name": "Nan Xiao",
+        "affiliation": "SBG",
+        "email": "nan.xiao@sevenbridges.com",
+        "contribution": ["createdBy"],
+        "orcid": ""
+      },
+
+      {
+        "name": "Dennis Dean",
+        "affiliation": "SBG",
+        "email": "dennis.dean@sevenbridges.com",
+        "contribution": ["authoredBy"],
+        "orcid": ""
+      }
+    ],
+    "license": "https://spdx.org/licenses/CC-BY-4.0.html"
+  },
+  "usability_domain": [" This workflow can be used to perform the quantification of RNA-Seq data of a unified set of genomic features across all samples in an analysis suitable for a downstream differential expression step. Once quantification values are obtained, downstream differential expression analysis can be performed using DESeq2 or Ballgown tools on the Seven Bridges Platform.\nThough this is not the primary purpose of this workflow, it can be also used as a scattered spliced aware aligner which is able to process multiple samples at once since it outputs aligned BAM files by default. Additional costs for performing the quantification step is negligible compared to the indexing and alignment steps."],
+  "extension_domain": {
+    "fhir_extension": [{
+      "fhir_endpoint": "",
+      "fhir_version": "",
+      "fhir_resources": []
+    }],
+    "scm_extension": {
+      "scm_repository": "",
+      "scm_type": "git",
+      "scm_commit": "",
+      "scm_path": "",
+      "scm_preview": ""
+    }
+  },
+  "description_domain": {
+    "keywords": [],
+    "xref": [
+      {
+        "namespace": "nature",
+        "name": "HISAT, StringTie, Ballgown protocol paper",
+        "ids": ["nprot.2016.095"],
+        "access_time": "2019-10-17T00:00:00+0000"
+      },
+      {
+        "namespace": "stringtie",
+        "name": "StringTie manual page - using StringTie with DESeq2 and edgeR",
+        "ids": [""],
+        "access_time": "2019-10-17T00:00:00+0000"
+      }
+    ],
+    "platform": ["Seven Bridges Platform"],
+    "pipeline_steps": [
+      {
+        "step_number": 1,
+        "name": "RNA-Seq Quantification (HISAT2, StringTie)",
+        "description": "The RNA-Seq Quantification (HISAT2, StringTie) workflow described here can be used to perform a gene abundance estimation of RNA-Seq data (i.e. quantification) of a unified set of genes common for all samples in the analysis. The workflow is based on the Nature protocol paper [1] with the absence of the last step which carries out testing for differential expression - Ballgown. The first part of the workflow indexes and aligns RNA-Seq reads to the reference using tools from the HISAT2 toolkit. If the indexed reference already exists, the TAR bundle can be provided to HISAT2 Build instead of a FASTA file, in which case the indexing component will be skipped and the provided TAR bundle will be forwarded to the HISAT2 aligner. Aligned reads are then fed to the first run of StringTie which performs 'reference guided' transcriptome assembly for each sample. Assembled transcripts and reference annotation transcripts are then merged into a uniform set of transcripts. The second run of StringTie performs a quantification of merged transcripts and genes in each sample. For each sample, the workflow outputs the abundance estimation in the Ballgown input format (one TAR bundle containing 5 .ctab tables), two files containing transcript and gene expression values in the DESeq2 input format, and a TAB file containing FPKM, TPM, and Coverage values for each gene. In addition to files containing the abundance estimation, the workflow also outputs a GTF file with merged transcripts, GffCompare output files with comparison results between reference annotation transcripts, and merged transcripts and alignments in the BAM format for each sample.",
+        "version": "11",
+        "prerequisite": [],
+        "input_list": [
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "List of FASTQ Files"
+                    },
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "Reference annotation file"
+                    },
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "References or index files"
+                    }
+        ],
+        "output_list": [
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "Gene abundance estimation"
+                    },
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "DESeq2 transcript count matrix"
+                    },
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "DESeq2 gene count matrix"
+                    },
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "Archived Ballgown input tables"
+                    }
+        ]
+      },
+      {
+        "step_number": 2,
+        "name": "DESeq2",
+        "description": "DESeq2 performs differential gene expression analysis by use of negative binomial generalized linear models. It analyzes estimated read counts from several samples, each belonging to one of two or more conditions under study, searching for systematic changes between conditions, as compared to within condition variability.The Bioconductor R package DESeq2 provides a set of functions for importing data, performing exploratory analysis and finally testing for differential expression. This CWL tool is a wrapper around the script based on the standard workflow for this type of analysis.DESeq2 offers two kinds of hypothesis tests: the Wald test, where we use the estimated standard error of a log2 fold change to test if it is equal to zero, and the likelihood ratio test LRT. The LRT examines two models for the counts, a full model with a certain number of terms and a reduced model, in which some of the terms of the full model are removed. The test determines if the increased likelihood of the data using the extra terms in the full model is more than expected if those extra terms are truly zero. The LRT is therefore useful for testing multiple terms at once, for example testing 3 or more levels of a factor at once, or all interactions between two variables.",
+        "version": "1.18.1",
+        "prerequisite": [],
+        "input_list": [
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "Gene annotation"
+                    },
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "Expression data"
+                    },
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "Phenotype data"
+                    }
+        ],
+        "output_list": [
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "HTML report"
+                    },
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "Normalized counts"
+                    },
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "DESeq2 analysis results"
+                    },
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "RData files"
+                    }
+        ]
+      },
+      {
+        "step_number": 3,
+        "name": "Gene Set Enrichment",
+        "description": "This KnowEnG Gene Set Characterization workflow tests a gene set for enrichment against a large compendium of annotations.This workflow starts with a user-submitted gene set (or multiple gene sets) and determines if each gene set is enriched for a pathway, a Gene Ontology term, or other types of annotations. This pipeline tests your gene set for enrichment against a large compendium of annotations. Gene Set Characterization can be done using a standard statistical test or in a Knowledge Network-guided mode (using DRaWR).A network-guided analysis can offer various benefits over a standard one, including considering not just significant genes but also their network neighbors, and inferring properties of poorly annotated genes.",
+        "version": "2",
+        "prerequisite": [],
+        "input_list": [
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "DESeq2 analysis result"
+                    }
+        ],
+        "output_list": [
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "Gene Enrichment Report"
+                    }
+        ]
+      },
+      {
+        "step_number": 4,
+        "name": "SBG Decompressor",
+        "description": "SBG Decompressor performs the extraction of the input archive file. Supported formats are:TAR, TAR.GZ (TGZ), TAR.BZ2 (TBZ2), GZ, BZ2, ZIP. If the archive contains folder structure, it is going to be flatten because CWL doesn't support folders at the moment. In that case the output would contain all the files from all the folders from the archive.",
+        "version": "2",
+        "prerequisite": [],
+        "input_list": [
+                    {
+                      "access_time": "2019-10-17T00:00:00+0000",
+                      "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                      "sha1_checksum": "NA",
+                      "filename": "Input archive file"
+                    }
+        ],
+        "output_list": [
+                    {
+                        "access_time": "2019-10-17T00:00:00+0000",
+                        "uri": "https://cgc.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/tasks/ece0685c-b59d-4bd7-af1a-510a6ab91e71/",
+                        "sha1_checksum": "NA",
+                        "filename": "Output files"
+                    }
+        ]
+      }
+    ]
+  },
+  "execution_domain": {
+    "script": [""],
+    "script_driver": "Seven Bridges Common Workflow Language Executor",
+    "software_prerequisites": [
+            {
+                "name": "Seven Bridges Platform", 
+                "version": "2019-10-17",
+                "uri": {
+                    "uri": "https://igor.sbgenomics.com/",
+                    "access_time": "2019-10-17T00:00:00+0000",
+                    "filename": "Seven Bridges Genomics Cloud"
+                }
+            }
+    ],
+    "external_data_endpoints": [],
+    "environment_variables": {
+      "AWS": "r4.8xlarge (2048GB)"
+    }
+  },
+  "parametric_domain": [
+    {
+      "param": "Covariate of interest",
+      "value": "condition",
+      "step": "2"
+    },
+    {
+      "param": "Factor level - reference",
+      "value": "Not_Failing",
+      "step": "2"
+    },
+    {
+      "param": "Factor level - test",
+      "value": "BiVentricular_Heart_Failure",
+      "step": "2"
+    }
+  ],
+  "io_domain": {
+    "input_subdomain": [
+      {
+        "uri": {
+            "filename": "grch38_tran.tar.gz",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7f9617e4b065d37375a8e2",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965776_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed250e4b011b529311ada",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965776_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312998",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965777_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed256e4b011b529311b20",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965777_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b52931299a",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965778_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed261e4b09cae769fc0c2",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965778_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a18",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965779_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed23ae4b09cae769fbf84",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": {
+            "filename": "SRR7965779_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129d9",
+            "access_time": "2019-09-23T02:54:05Z"
+        }
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965780_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed24de4b011b529311ad6",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965780_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129bd",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965781_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed267e4b011b529311b75",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965781_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129cc",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965782_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed275e4b09cae769fc0d9",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965782_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129c8",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965783_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed254e4b09cae769fc050",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965783_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129b7",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965784_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed275e4b09cae769fc0d5",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965784_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129e0",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965785_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed26ae4b09cae769fc0ce",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965785_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129e6",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965786_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed25ae4b09cae769fc0a8",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965786_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129de",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965787_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed256e4b09cae769fc08a",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965787_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312990",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965788_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed255e4b09cae769fc05c",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965788_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a12",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965789_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed253e4b09cae769fc04c",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965789_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129e4",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965790_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed25be4b011b529311b44",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965790_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129ea",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965791_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed258e4b09cae769fc09f",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965791_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a13",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965792_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed281e4b011b529311b8c",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965792_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a0a",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965793_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed265e4b09cae769fc0ca",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965793_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129c3",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965794_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed264e4b011b529311b5f",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965794_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a4a",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965795_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed263e4b09cae769fc0c6",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965795_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129d0",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965796_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed258e4b011b529311b36",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965796_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a54",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965797_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed261e4b09cae769fc0be",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965797_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a3e",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965798_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed273e4b011b529311b88",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965798_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a0f",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965799_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed251e4b09cae769fc025",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965799_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a0b",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965800_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed267e4b011b529311b77",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965800_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129bf",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965801_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed268e4b011b529311b80",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965801_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129d4",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965802_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed268e4b011b529311b7c",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965802_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b529312a26",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965803_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed252e4b011b529311ade",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965803_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129ef",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965804_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed263e4b011b529311b50",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965804_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129b2",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965805_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ed272e4b011b529311b84",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "SRR7965805_1_trimmed.fq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ef4cfe4b011b5293129f8",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965776_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d6ee29de4b09cae769fd182",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965777_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776902e4b065d3736bb6c9",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965778_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d77690fe4b065d3736bb6fd",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965779_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768e5e4b065d3736bb5d1",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965780_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768f2e4b065d3736bb616",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965781_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768f6e4b011b5028fd3e8",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965782_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776916e4b065d3736bb717",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965783_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768fde4b065d3736bb678",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965784_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776923e4b011b5028fd4a1",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965785_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776923e4b011b5028fd49d",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965786_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768fce4b011b5028fd406",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965787_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768fee4b011b5028fd41a",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+        
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965788_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776903e4b065d3736bb6cd",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965789_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768fee4b011b5028fd41e",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965790_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776908e4b011b5028fd477",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965791_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776909e4b065d3736bb6f5",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965792_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776923e4b065d3736bb71f",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965793_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768f4e4b011b5028fd3da",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965794_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d77692ae4b011b5028fd4a5",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965795_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776916e4b065d3736bb713",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965796_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776903e4b065d3736bb6db",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965797_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776905e4b065d3736bb6df",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965798_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d77690ee4b065d3736bb6f9",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965799_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768fbe4b065d3736bb658",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965800_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776911e4b011b5028fd495",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965801_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776911e4b011b5028fd491",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965802_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d77690ce4b011b5028fd48d",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965803_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776902e4b011b5028fd44e",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965804_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776913e4b011b5028fd499",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_1_SRR7965805_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d776917e4b065d3736bb71b",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965776_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7768f1e4b065d3736bb610",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965777_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695d7e4b06d0cb48be3a0",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965778_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695e7e4b06d0cb48be3fe",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965779_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695c4e4b06d0cb48be31c",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965780_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695c6e4b06d0cb48be320",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965781_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695cbe4b065d300c1b882",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965782_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695dfe4b06d0cb48be3ca",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965783_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695e6e4b065d300c1b8fa",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965784_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d869618e4b06d0cb48be412",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "_2_SRR7965785_1.fastq",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8695eee4b06d0cb48be40a",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      },
+      {
+        "uri": 
+          {
+            "filename": "Homo_sapiens.GRCh38.84.gtf",
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d7f9617e4b065d37375a8e5",
+            "access_time": "2019-09-23T02:54:05Z"
+          }
+         
+      }
+    ],
+    "output_subdomain": [
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8850f2e4b065d300c22175",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "txt",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8850f2e4b065d300c22171",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22572",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22598",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2257f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2255a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22582",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225d4",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22510",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2257b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2254c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225ca",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225b8",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22558",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22532",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225c0",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22540",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22546",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225b4",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22504",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2256b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225a2",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22550",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225b1",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225ba",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225ad",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225a0",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22517",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22506",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225a6",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225d2",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225b6",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22514",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22564",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225d0",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22538",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2257a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22590",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22529",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2250c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22536",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2255b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22585",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22593",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2258b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22500",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22516",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22560",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22523",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2254a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22566",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225ac",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2254d",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2251a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225c6",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "edb",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22569",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22541",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22502",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22561",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22568",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225da",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c224fa",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225ce",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "rnk",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225cc",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22559",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2258e",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225d8",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22530",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225c2",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2252b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2259c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225a8",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22526",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2256e",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2250e",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22596",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225c4",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2253a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c224f6",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2259b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "rpt",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225b0",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22592",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2252c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22554",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "gmt",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225a9",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2259a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2251f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22544",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22573",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22534",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2251e",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22525",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22576",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225bc",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2250a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22545",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225d6",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2256f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2251c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c224f8",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2258a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22577",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22552",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225c8",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2253c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22583",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225a3",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2253d",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "css",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22520",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225dc",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22588",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c2257e",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c225bd",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22512",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22553",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "xls",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c224fc",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "png",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c22508",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851ffe4b065d300c224fe",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "b64html",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8850f2e4b065d300c22173",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22097",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22053",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2206d",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22069",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220a1",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220a4",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2208b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22045",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22079",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2208c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220a7",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2203f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2206b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22047",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2209e",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2204c",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220b9",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2209d",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22057",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2207f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22085",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220bb",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22043",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22054",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220b5",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2206f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2204b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22062",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22051",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "csv",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220a8",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "RData",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8850f2e4b065d300c22177",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "zip",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d8851e5e4b065d300c2231d",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22092",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22088",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220c1",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22041",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22075",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2207a",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22059",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22090",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22076",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22049",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22083",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22086",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22061",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2208f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220af",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220b7",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220b0",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22095",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220a3",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220bd",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2205b",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22065",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2205d",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2205f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22071",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2207d",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22073",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c2204f",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22067",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "bam",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220bf",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "refmap",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220ad",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "tracking",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220b3",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "gtf",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22099",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "loci",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22081",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "stats",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c22098",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      },
+      {
+        "mediatype": "tmap",
+        "uri": 
+          {
+            "uri": "https://igor.sbgenomics.com/u/david.roberson/differential-expression-pathway-analysis/files/5d884f17e4b065d300c220a9",
+            "access_time": "2019-09-23T05:02:56Z"
+          }
+         
+      }
+    ]
+  },
+  "error_domain": {
+    "empirical_error": {},
+    "algorithmic_error": {}
+  }
+}

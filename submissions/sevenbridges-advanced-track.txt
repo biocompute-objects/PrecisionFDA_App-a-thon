@@ -1,0 +1,3 @@
+This is the Seven Bridges submission to the precisionFDA App-a-Thon BCO Challenge (advanced track).
+
+GitHub repo: https://github.com/nanxstats/sevenbridges-gcs
